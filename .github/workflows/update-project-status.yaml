@@ -29,6 +29,8 @@ jobs:
               "paydeuk_server_service": "3a5b5ff9",
               "paydeuk_store": "e40d1982",
               "paydeuk_server_card": "4fa8c4c1",
+              "paydeuk_server_module": "7da7691b",
+              "paydeuk_web_module": "58a4334c",
               "default": "29650f2b" // for Test
             };
             
