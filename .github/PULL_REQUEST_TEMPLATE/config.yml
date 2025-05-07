@@ -1,0 +1,9 @@
+pull_request_templates:
+  - name: 🐛 Bug Fix
+    path: PULL_REQUEST_TEMPLATE/bug_fix.md
+  - name: ✨ Feature Addition
+    path: PULL_REQUEST_TEMPLATE/feature_addition.md
+  - name: 📚 Documentation Update
+    path: PULL_REQUEST_TEMPLATE/docs_update.md
+  - name: ⚙️ Setting/Environment Change
+    path: PULL_REQUEST_TEMPLATE/setting_change.md

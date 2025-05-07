@@ -1,0 +1,116 @@
+name: Update Project Status
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  update-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update project status
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            const graphql = github.graphql;
+            const token = process.env.GITHUB_TOKEN;
+            
+            const projectId = "PVT_kwDODHuVY84A4Dke";
+            const statusFieldId = "PVTSSF_lADODHuVY84A4DkezgtFqMg";
+            const toDoOptionId = "f75ad846";
+            const inReviewOptionId = "df73e18b";
+
+            const devFieldId = "PVTSSF_lADODHuVY84A4DkezgtPuFU"; // dev 필드 ID
+            const devOptions = {
+              "paydeuk_web": "29650f2b",
+              "paydeuk_server_service": "3a5b5ff9",
+              "paydeuk_store": "e40d1982",
+              "paydeuk_server_card": "4fa8c4c1",
+              "default": "29650f2b" // for Test
+            };
+            
+            const graphqlWithAuth = graphql.defaults({
+              headers: {
+                authorization: `token ${token}`,
+              },
+            });
+
+            const contentId = context.payload.issue ? context.payload.issue.node_id : context.payload.pull_request.node_id;
+
+            // Get the project item ID
+            const { node } = await graphqlWithAuth(`
+              query($contentId: ID!) {
+                node(id: $contentId) {
+                  ... on Issue {
+                    projectItems(first: 1) {
+                      nodes {
+                        id
+                      }
+                    }
+                  }
+                  ... on PullRequest {
+                    projectItems(first: 1) {
+                      nodes {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            `, { contentId });
+
+            const itemId = node.projectItems.nodes[0].id;
+
+            // Determine the status option ID based on event type
+            const statusOptionId = context.eventName === "issues" ? toDoOptionId : inReviewOptionId;
+
+            // Update the status field
+            await graphqlWithAuth(`
+              mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                updateProjectV2ItemFieldValue(input: {
+                  projectId: $projectId,
+                  itemId: $itemId,
+                  fieldId: $fieldId,
+                  value: {
+                    singleSelectOptionId: $optionId
+                  }
+                }) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }
+            `, {
+              projectId,
+              itemId,
+              fieldId: statusFieldId,
+              optionId: statusOptionId,
+            });
+
+            const repoName = context.payload.repository.name;
+            const devOptionId = devOptions[repoName] || devOptions["default"];
+
+            await graphqlWithAuth(`
+              mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                updateProjectV2ItemFieldValue(input: {
+                  projectId: $projectId,
+                  itemId: $itemId,
+                  fieldId: $fieldId,
+                  value: {
+                    singleSelectOptionId: $optionId
+                  }
+                }) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }
+            `, {
+              projectId,
+              itemId,
+              fieldId: devFieldId,
+              optionId: devOptionId,
+            });

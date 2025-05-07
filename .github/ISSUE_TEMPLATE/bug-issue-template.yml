@@ -1,0 +1,37 @@
+name: "🐞 Bug"
+description: "버그 수정"
+labels: ["🐞 Bug"]
+type: "Bug"
+title: "[Bug]: "
+body:
+  - type: textarea
+    attributes:
+      label: 🐞 버그 설명
+      description: 발견된 버그에 대해 구체적으로 설명해 주세요.
+      placeholder: 언제, 어디서, 어떤 문제가 발생했는지 상세히 작성해주세요.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🔁 재현 방법
+      description: 버그를 재현하는 방법을 순서대로 작성해주세요.
+      value: |
+        1. 
+        2. 
+        3. 
+        ...
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 📸 스크린샷 / 에러 로그
+      description: 에러 메시지, 콘솔 로그, 스크린샷 등 참고할 수 있는 자료가 있다면 첨부해주세요.
+  - type: textarea
+    attributes:
+      label: 기대한 동작
+      description: 원래 기대했던 동작을 적어주세요.
+  - type: markdown
+    attributes:
+      value: |
+        ## 꼭 해결해주세요 용사님!! 🧙‍♂️🔥
+ 

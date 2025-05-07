@@ -1,0 +1,49 @@
+name: "✨ Feature"
+description: "새로운 기능 추가"
+labels: ["✨ Feature"]
+type : "Feature"
+title: "[Feature]: "
+body:
+  - type: textarea
+    attributes:
+      label: 📄 설명
+      description: 새로운 기능에 대한 설명을 작성해 주세요.
+      value: |
+        1.
+        2.
+        3.
+        ...
+      placeholder: 자세히 적을수록 좋습니다!
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: ✅ 작업할 내용
+      description: 할 일을 체크박스 형태로 작성해주세요.
+      placeholder: 상세하게
+      value : |
+        - [ ] 작업 항목 1
+        - [ ] 작업 항목 2
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🙋🏻 참고 자료
+      description: 참고 자료가 있다면 작성해 주세요.
+  - type: textarea
+    attributes:
+      label: 기타사항
+      description: 기타사항
+      placeholder: 기타사항을 적어주세요
+  - type: checkboxes
+    attributes:
+      label: Code of Conduct
+      description: The Code of Conduct helps create a safe space for everyone. We require
+        that everyone agrees to it.
+      options:
+        - label: I agree to follow this project's [Code of Conduct](link/to/coc)
+          required: true
+  - type: markdown
+    attributes:
+      value: |
+        ## 잘 개발해주세요 용사님!! 🧙‍♂️🔥

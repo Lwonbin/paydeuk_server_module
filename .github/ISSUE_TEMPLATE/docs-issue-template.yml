@@ -1,0 +1,30 @@
+name: "📚 Docs"
+description: "문서 관련 작업"
+labels: ["📃 Docs"]
+type: "Task"
+title: "[Docs]: "
+body:
+  - type: textarea
+    attributes:
+      label: 📄 문서 내용
+      description: 작성 또는 수정하려는 문서의 내용을 적어주세요.
+      placeholder: "예: README 수정, API 명세 추가 등"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🗂 관련 파일 또는 위치
+      description: 수정하거나 추가할 문서의 파일명 혹은 경로를 명시해 주세요.
+  - type: textarea
+    attributes:
+      label: ✅ 작업 체크리스트
+      description: 문서 작업 계획을 체크리스트로 작성해주세요.
+      value: |
+        - [ ] 문서 초안 작성
+        - [ ] 리뷰 요청
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        ## 이해하기 쉽게 써주세요 용사님!! 📝
