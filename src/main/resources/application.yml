@@ -1,0 +1,60 @@
+spring:
+#  config:
+#    import: application-secret.yml
+#  servlet:
+#    multipart:
+#      max-file-size: 3MB # profile 이미지 사이즈 제한
+  datasource:
+    url: jdbc:mysql://localhost:3306/paydeuk_server_payment?Timezone=Asia/Seoul
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none  # 필요에 따라 create, update, validate, none 선택
+    show-sql: true  # 콘솔에서 실행되는 SQL 보기
+    properties:
+      hibernate:
+        format_sql: true  # SQL을 보기 좋게 출력
+
+#  data:
+#    redis:
+#      host: 127.0.0.1
+#      port: 6379
+#      password: 1234
+
+  sql:
+    init:
+      mode: always # MySQL에서 data.sql, schema.sql 자동 적용하기 위한 설정
+      encoding: UTF-8
+
+
+# Swagger
+springdoc:
+  swagger-ui:
+    groups-order: DESC
+    tags-sorter: alpha
+    operations-sorter: method
+    disable-swagger-default-url: true
+    display-request-duration: true
+    defaultModelsExpandDepth: 2
+    defaultModelExpandDepth: 2
+  api-docs:
+    path: /v3/api-docs
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  writer-with-default-pretty-printer: true
+  model-and-view-allowed: true
+  paths-to-match:
+    - /api/**
+    - /login
+
+# Exception handler
+
+error:
+  printStackTrace: true # Stack trace 출력 여부
+  printStackTraceLine: 10 # Stack trace 출력 줄 수
+
