@@ -6,32 +6,5 @@ public final class SwaggerResponseExample {
     throw new UnsupportedOperationException("Utility class");
   }
 
-  public static final String CARD_COMPANY_404 =
-      """
-          {
-            "success": false,
-            "status": "NOT_FOUND",
-            "message": "해당 카드사가 존재하지 않습니다.",
-            "response": {
-              "errorCode": "CC_ERR_01",
-              "time": "2024-01-01T00:00:00",
-              "stackTrace": "com.tower_of_fisa.paydeuk_server_service.config.exception.custom.exception.NoSuchElementFoundException404: 해당 카드사가 존재하지 않습니다.",
-              "errors": null
-            }
-          }
-      """;
-  public static final String CARD_404 =
-      """
-          {
-            "success": false,
-            "status": "NOT_FOUND",
-            "message": "해당 카드를 찾을 수 없습니다.",
-            "response": {
-              "errorCode": "CAR_01",
-              "time": "2024-01-01T00:00:00",
-              "stackTrace": "com.tower_of_fisa.paydeuk_server_service.config.exception.custom.exception.NoSuchElementFoundException404: 해당 카드를 찾을 수 없습니다.",
-              "errors": null
-            }
-          }
-      """;
+
 }

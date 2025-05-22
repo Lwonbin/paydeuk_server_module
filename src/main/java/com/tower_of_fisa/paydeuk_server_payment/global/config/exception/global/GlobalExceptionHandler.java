@@ -105,15 +105,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         exception, ErrorDefineCode.UNCAUGHT, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ResponseEntity<Object> handleEnumTypeMismatch(MethodArgumentTypeMismatchException ex) {
-    Class<?> requiredType = ex.getRequiredType();
 
-    if (requiredType != null && requiredType.isEnum() && "cardCompany".equals(ex.getName())) {
-      return buildErrorResponse(ex, ErrorDefineCode.CARD_COMPANY_NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
-
-    return buildErrorResponse(ex, ErrorDefineCode.UNCAUGHT, HttpStatus.BAD_REQUEST);
-  }
 }
