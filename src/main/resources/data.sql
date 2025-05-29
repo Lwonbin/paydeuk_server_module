@@ -16,11 +16,13 @@ VALUES ('관리자', 'admin', '$2a$12$2JKJbuJMKQJe0hX5zr9c0e.BgSBjVe2cKnBRis1e4v
 -- card_id == 1
 INSERT INTO card (name, type, image_url, annual_fee, company, created_at, updated_at)
 VALUES ('현대카드 M', 'credit', 'dummyurl', 30000, 'HYUNDAI', NOW(), NOW()),
-('삼성카드 S', 'credit', 'dummyurl2', 20000, 'SAMSUNG', NOW(), NOW());
+('삼성카드 S', 'credit', 'dummyurl2', 20000, 'SAMSUNG', NOW(), NOW()),
+       ('우리카드 W', 'credit', 'dummyurl3', 40000, 'WOORI', NOW(), NOW());
 -- USER_CARD TABLE
 INSERT INTO user_card (user_id, card_id, card_token, card_number, is_default_card, created_at, updated_at)
 VALUES (1, 1, 'mock_token', '1234', 1, NOW(), NOW()),
-(1, 2, 'mock_token2', '5678', 0, NOW(), NOW());
+(1, 2, 'mock_token2', '5678', 0, NOW(), NOW()),
+       (1, 3, 'mock_token3', '4321', 0, NOW(), NOW());
 
 -- MERCHANT TABLE
 INSERT INTO merchant (name, is_active, commission_rate, business_number, manager_name, phone, manager_phone, category,
@@ -47,14 +49,18 @@ INSERT INTO benefit (title, description, benefit_type, has_additional_condition,
 VALUES ('기본혜택', '국내외 가맹점 1.5% M포인트 적립', 'point', 1, NULL, NOW(), NOW()),
        ('추가혜택', '컬리 5% M포인트 적립', 'point', 1, 2, NOW(), NOW()), -- 컬리
        ('추가혜택', '쿠팡 5% M포인트 적립', 'point', 1, 7, NOW(), NOW()), -- 쿠팡
-       ('추가혜택', '이마트 5% M포인트 적립', 'point', 1, 9, NOW(), NOW());
--- 이마트
+       ('추가혜택', '이마트 5% M포인트 적립', 'point', 1, 9, NOW(), NOW()), -- 이마트
+       ('기본혜택', '쿠팡 800원 할인', 'discount', 1, 7, NOW(), NOW()),
+       ('기본혜택', 'CGV 10% M포인트 적립', 'point', 1, 11, NOW(), NOW());
+
 
 
 -- SPENDING_RANGE TABLE
 INSERT INTO spending_range (min_spending, max_spending)
 VALUES (500000, NULL),
-       (1000000, NULL);
+       (1000000, NULL),
+       (300000, 500000),
+       (500000, 1000000);
 
 -- BENEFIT_CONDITION TABLE
 INSERT INTO benefit_condition (benefit_id, spending_range_id, value, category, created_at, updated_at)
@@ -66,7 +72,11 @@ VALUES (2, NULL, 10000, 'MONTHLY_DISCOUNT_LIMIT', NOW(), NOW()),
 -- DISCOUNT TABLE
 INSERT INTO discount (benefit_id, spending_range_id, apply_type, amount, created_at, updated_at)
 VALUES (1, 1, 'rate', 1.5, NOW(), NOW()),
-       (1, 2, 'rate', 5, NOW(), NOW());
+       (1, 2, 'rate', 5, NOW(), NOW()),
+       (3, 3, 'rate', 7, NOW(), NOW()),
+       (3, 4, 'rate', 10, NOW(), NOW()),
+       (5, 3, 'amount', 800, NOW(), NOW()),
+       (5, 4, 'amount', 1000, NOW(), NOW());
 
 -- CARD_BENEFIT TABLE
 INSERT INTO card_benefit (card_id, benefit_id, created_at, updated_at)
@@ -74,8 +84,11 @@ VALUES (1, 1, NOW(), NOW()),
        (1, 2, NOW(), NOW()),
        (1, 3, NOW(), NOW()),
        (1, 4, NOW(), NOW()),
-       (2, 2, NOW(), NOW()),
-       (2, 3, NOW(), NOW());
+       -- (2,2,NOW(),NOW()),
+      -- (2, 3, NOW(), NOW()),
+       (3, 5, NOW(), NOW()),
+       (3, 6, NOW(), NOW());
+
 
 -- PAYMENT TABLE
 INSERT INTO payment (product_name, amount, payment_success, user_card_id, merchant_id, card_benefit_id, discount_amount, created_at, updated_at)

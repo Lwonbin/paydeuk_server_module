@@ -58,3 +58,7 @@ error:
   printStackTrace: true # Stack trace 출력 여부
   printStackTraceLine: 10 # Stack trace 출력 줄 수
 
+# card-server
+card:
+  api:
+    url: "http://localhost:8081/api/card"
