@@ -1,10 +1,10 @@
-package com.tower_of_fisa.paydeuk_server_module.user_card.controller;
+package com.tower_of_fisa.paydeuk_server_module.controller;
 
-import com.tower_of_fisa.paydeuk_server_module.user_card.dto.RecommendRequest;
+import com.tower_of_fisa.paydeuk_server_module.dto.RecommendRequest;
 import com.tower_of_fisa.paydeuk_server_module.global.common.response.CommonResponse;
 import com.tower_of_fisa.paydeuk_server_module.global.common.response.SwaggerErrorResponseType;
-import com.tower_of_fisa.paydeuk_server_module.user_card.dto.RecommendResponse;
-import com.tower_of_fisa.paydeuk_server_module.user_card.service.UserCardService;
+import com.tower_of_fisa.paydeuk_server_module.dto.RecommendResponse;
+import com.tower_of_fisa.paydeuk_server_module.service.UserCardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,4 +1,4 @@
-package com.tower_of_fisa.paydeuk_server_module.benefit_condition.repository;
+package com.tower_of_fisa.paydeuk_server_module.repository;
 
 import com.tower_of_fisa.paydeuk_server_module.domain.entity.BenefitCondition;
 import org.springframework.data.jpa.repository.JpaRepository;
