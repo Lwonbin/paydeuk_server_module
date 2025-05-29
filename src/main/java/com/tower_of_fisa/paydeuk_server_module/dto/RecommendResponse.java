@@ -1,4 +1,4 @@
-package com.tower_of_fisa.paydeuk_server_module.user_card.dto;
+package com.tower_of_fisa.paydeuk_server_module.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

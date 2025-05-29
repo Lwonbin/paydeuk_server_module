@@ -1,11 +1,11 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /module
+
 spring:
-#  config:
-#    import: application-secret.yml
-#  servlet:
-#    multipart:
-#      max-file-size: 3MB # profile 이미지 사이즈 제한
   datasource:
-    url: jdbc:mysql://localhost:3306/paydeuk_server_payment?Timezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/paydeuk?Timezone=Asia/Seoul
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -18,12 +18,6 @@ spring:
     properties:
       hibernate:
         format_sql: true  # SQL을 보기 좋게 출력
-
-#  data:
-#    redis:
-#      host: 127.0.0.1
-#      port: 6379
-#      password: 1234
 
   sql:
     init:

@@ -1,4 +1,4 @@
-package com.tower_of_fisa.paydeuk_server_module.user_card.client;
+package com.tower_of_fisa.paydeuk_server_module.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +6,7 @@ import com.tower_of_fisa.paydeuk_server_module.global.common.ErrorDefineCode;
 import com.tower_of_fisa.paydeuk_server_module.global.config.exception.custom.exception.InvalidJsonFormatException400;
 import com.tower_of_fisa.paydeuk_server_module.global.config.exception.custom.exception.NetworkException503;
 import com.tower_of_fisa.paydeuk_server_module.global.config.exception.custom.exception.NoSuchElementFoundException404;
-import com.tower_of_fisa.paydeuk_server_module.user_card.dto.CardConditionResponse;
+import com.tower_of_fisa.paydeuk_server_module.dto.CardConditionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
