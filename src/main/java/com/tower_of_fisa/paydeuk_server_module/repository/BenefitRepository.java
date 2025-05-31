@@ -15,4 +15,7 @@ public interface BenefitRepository extends JpaRepository<Benefit, Long> {
             "WHERE uc.user.id = :userId " +
             "AND b.merchant.id = :merchantId " )
     List<Benefit> findByUserIdAndMerchantId(Long userId, Long merchantId);
+
+    @Query("SELECT b.hasAdditionalCondition FROM Benefit b WHERE b.id = :benefitId")
+    boolean findHasAdditionalConditionById(Long benefitId);
 }

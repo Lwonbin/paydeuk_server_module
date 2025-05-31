@@ -48,7 +48,10 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers("/api/**")
-                    .hasRole("USER"))
+                    .hasRole("USER")
+                    .requestMatchers("/swagger-ui/**","/v3/api-docs/**")
+                        .permitAll()
+        )
         .httpBasic(AbstractHttpConfigurer::disable)
         .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

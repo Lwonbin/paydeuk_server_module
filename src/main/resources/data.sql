@@ -65,7 +65,7 @@ VALUES (500000, NULL),
 -- BENEFIT_CONDITION TABLE
 INSERT INTO benefit_condition (benefit_id, spending_range_id, value, category, created_at, updated_at)
 VALUES (2, NULL, 10000, 'MONTHLY_DISCOUNT_LIMIT', NOW(), NOW()),
-       (3, NULL, 10000, 'MONTHLY_DISCOUNT_LIMIT', NOW(), NOW()),
+       (3, NULL, 900, 'MONTHLY_DISCOUNT_LIMIT', NOW(), NOW()),
        (4, NULL, 10000, 'MONTHLY_DISCOUNT_LIMIT', NOW(), NOW());
 
 
@@ -75,8 +75,10 @@ VALUES (1, 1, 'rate', 1.5, NOW(), NOW()),
        (1, 2, 'rate', 5, NOW(), NOW()),
        (3, 3, 'rate', 7, NOW(), NOW()),
        (3, 4, 'rate', 10, NOW(), NOW()),
-       (5, 3, 'amount', 800, NOW(), NOW()),
-       (5, 4, 'amount', 1000, NOW(), NOW());
+       (5, 3, 'amount', 600, NOW(), NOW()),
+       (5, 4, 'amount', 800, NOW(), NOW()),
+       (2, 3, 'rate', 3, NOW(), NOW()),
+       (2, 4, 'rate', 5, NOW(), NOW());
 
 -- CARD_BENEFIT TABLE
 INSERT INTO card_benefit (card_id, benefit_id, created_at, updated_at)

@@ -10,29 +10,26 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
-    info =
+        info =
         @Info(
-            title = "TOWER OF FISA API Docs",
-            description = "페이득 Project의 Core API 문서입니다.",
-            version = "v1"))
+                title = "TOWER OF FISA API Docs",
+                description = "페이득 Project의 Core API 문서입니다.",
+                version = "v1"))
 @Configuration
 public class SwaggerConfig {
-
-  private static final String BEARER_TOKEN_PREFIX = "Bearer";
-
   @Bean
   public OpenAPI openAPI() {
-    String securityJwtName = "JWT";
-    SecurityRequirement securityRequirement = new SecurityRequirement().addList(securityJwtName);
+    SecurityRequirement securityRequirement =
+            new SecurityRequirement().addList("userNameSecurityName");
     Components components =
-        new Components()
-            .addSecuritySchemes(
-                securityJwtName,
-                new SecurityScheme()
-                    .name(securityJwtName)
-                    .type(SecurityScheme.Type.HTTP)
-                    .scheme(BEARER_TOKEN_PREFIX)
-                    .bearerFormat(securityJwtName));
+            new Components()
+                    .addSecuritySchemes(
+                            "userNameSecurityName",
+                            new SecurityScheme()
+                                    .name("X-User-Name")
+                                    .type(SecurityScheme.Type.APIKEY)
+                                    .in(SecurityScheme.In.HEADER)
+                                    .bearerFormat("X-User-Name"));
 
     return new OpenAPI().addSecurityItem(securityRequirement).components(components);
   }

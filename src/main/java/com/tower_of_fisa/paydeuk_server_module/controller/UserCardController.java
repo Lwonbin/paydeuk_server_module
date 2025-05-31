@@ -40,15 +40,11 @@ public class UserCardController {
     public CommonResponse<List<RecommendResponse>> recommendCard(@RequestBody RecommendRequest request) {
         List<RecommendResponse> response = userCardService.recommendCard(request);
 
-        if (response.isEmpty()) {
-            return new CommonResponse<>(true, HttpStatus.OK, "추천 가능한 카드가 없습니다.", response);
-        }
-
         boolean hasDiscount = response.stream().anyMatch(r -> r.getDiscountAmount() > 0);
 
         String message = hasDiscount
                 ? "카드 추천에 성공했습니다." // 혜택 있는 카드
-                : "적용 가능한 혜택은 없지만 대표카드를 추천합니다."; // fallback
+                : "적용 가능한 혜택이 없어 대표카드를 추천합니다."; // fallback
 
         return new CommonResponse<>(true, HttpStatus.OK, message, response);
     }

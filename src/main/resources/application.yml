@@ -55,4 +55,4 @@ error:
 # card-server
 card:
   api:
-    url: "http://localhost:8081/api/card"
+    url: "http://localhost:8084/api/card"
