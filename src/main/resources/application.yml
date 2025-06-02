@@ -19,6 +19,12 @@ spring:
       hibernate:
         format_sql: true  # SQL을 보기 좋게 출력
 
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: 1234
+
   sql:
     init:
       mode: always # MySQL에서 data.sql, schema.sql 자동 적용하기 위한 설정
