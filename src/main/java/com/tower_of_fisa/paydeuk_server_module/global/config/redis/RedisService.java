@@ -18,6 +18,8 @@ public class RedisService {
     return (String) redisTemplate.opsForValue().get(key);
   }
 
+  public void updateValue(String key, String value) { redisTemplate.opsForValue().set(key, value); }
+
   public void deleteKey(String key) {
     redisTemplate.delete(key);
   }
