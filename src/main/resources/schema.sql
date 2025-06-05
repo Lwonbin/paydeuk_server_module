@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS paydeuk_server_payment;
-CREATE DATABASE paydeuk_server_payment;
-USE paydeuk_server_payment;
+DROP DATABASE IF EXISTS paydeuk;
+CREATE DATABASE paydeuk;
+USE paydeuk;
 
 CREATE TABLE spending_range
 (
