@@ -2,9 +2,11 @@ package com.tower_of_fisa.paydeuk_server_module.domain.entity;
 import com.tower_of_fisa.paydeuk_server_module.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Getter
 @Entity
 @AllArgsConstructor
@@ -12,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "payment")
 public class Payment extends BaseEntity {
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
   private Long id;
 
