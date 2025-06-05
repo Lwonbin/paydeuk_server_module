@@ -20,7 +20,7 @@ VALUES ('현대카드 M', 'credit', 'dummyurl', 30000, 'HYUNDAI', NOW(), NOW()),
        ('우리카드 W', 'credit', 'dummyurl3', 40000, 'WOORI', NOW(), NOW());
 -- USER_CARD TABLE
 INSERT INTO user_card (user_id, card_id, card_token, card_number, is_default_card, created_at, updated_at)
-VALUES (1, 1, 'mock_token', '1234', 1, NOW(), NOW()),
+VALUES (1, 1, 'hyundai_m_sungjun', '1234', 1, NOW(), NOW()),
 (1, 2, 'mock_token2', '5678', 0, NOW(), NOW()),
        (1, 3, 'mock_token3', '4321', 0, NOW(), NOW());
 
