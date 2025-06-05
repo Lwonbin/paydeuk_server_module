@@ -3,6 +3,7 @@ package com.tower_of_fisa.paydeuk_server_module.repository;
 import com.tower_of_fisa.paydeuk_server_module.domain.entity.UserCard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -25,7 +26,7 @@ public interface UserCardRepository extends JpaRepository<UserCard,Long> {
     FROM UserCard uc
     JOIN CardBenefit cb ON cb.card.id = uc.card.id
     WHERE cb.benefit.id = :benefitId
-""")
+    """)
     String findCardTokenByBenefitId(Long benefitId);
 
 
@@ -37,4 +38,9 @@ public interface UserCardRepository extends JpaRepository<UserCard,Long> {
     @Query("SELECT uc FROM UserCard uc JOIN FETCH uc.card WHERE uc.user.id = :userId AND uc.isDefaultCard = true")
     Optional<UserCard> findByUserIdAndIsDefaultCardTrue(Long userId);
 
+    @Query("SELECT uc.cardToken FROM UserCard uc WHERE uc.user.id = :userId AND uc.card.id = :cardId")
+    Optional<String> findCardTokenByUserIdAndCardId(@Param("userId") Long userId, @Param("cardId") Long cardId);
+
+    @Query("SELECT uc FROM UserCard uc WHERE uc.user.id = :userId AND uc.card.id = :cardId")
+    Optional<UserCard> findByUserIdAndCardId(@Param("userId") Long userId, @Param("cardId") Long cardId);
 }

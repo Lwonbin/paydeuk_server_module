@@ -2,6 +2,7 @@ package com.tower_of_fisa.paydeuk_server_module.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tower_of_fisa.paydeuk_server_module.dto.PaymentResponse;
 import com.tower_of_fisa.paydeuk_server_module.global.common.ErrorDefineCode;
 import com.tower_of_fisa.paydeuk_server_module.global.config.exception.custom.exception.InvalidJsonFormatException400;
 import com.tower_of_fisa.paydeuk_server_module.global.config.exception.custom.exception.NetworkException503;
@@ -97,6 +98,42 @@ public class CardApiClient {
             JsonNode responseArray = root.path("response");
 
             return objectMapper.readerForListOf(CardConditionResponse.class)
+                    .readValue(responseArray);
+        } catch (Exception e) {
+            throw new InvalidJsonFormatException400(ErrorDefineCode.INVALID_JSON_FORMAT);
+        }
+    }
+
+    public PaymentResponse processPayment(String cardToken, Double amount, Long merchantId) {
+        String url = cardApiUrl + "/payment";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("cardToken", cardToken);
+        body.put("amount", amount);
+        body.put("merchantId", merchantId);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+        try{
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+             return parsePaymentResponse(response.getBody());
+        }catch (HttpStatusCodeException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                throw new NoSuchElementFoundException404(ErrorDefineCode.CARD_NOT_FOUND);
+            }
+            throw new NetworkException503(ErrorDefineCode.UNCAUGHT);
+        }
+    }
+
+    private PaymentResponse parsePaymentResponse(String body) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode root = objectMapper.readTree(body);
+
+            JsonNode responseArray =root.path("response");
+            return objectMapper.readerFor(PaymentResponse.class)
                     .readValue(responseArray);
         } catch (Exception e) {
             throw new InvalidJsonFormatException400(ErrorDefineCode.INVALID_JSON_FORMAT);
