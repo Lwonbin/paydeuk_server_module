@@ -1,24 +1,20 @@
 package com.tower_of_fisa.paydeuk_server_module.service;
 
 import com.tower_of_fisa.paydeuk_server_module.client.CardApiClient;
-import com.tower_of_fisa.paydeuk_server_module.domain.entity.CardBenefit;
-import com.tower_of_fisa.paydeuk_server_module.domain.entity.Merchant;
-import com.tower_of_fisa.paydeuk_server_module.domain.entity.Payment;
-import com.tower_of_fisa.paydeuk_server_module.domain.entity.UserCard;
+import com.tower_of_fisa.paydeuk_server_module.domain.entity.*;
 import com.tower_of_fisa.paydeuk_server_module.dto.PaymentResponse;
 import com.tower_of_fisa.paydeuk_server_module.dto.ProcessPaymentRequest;
+import com.tower_of_fisa.paydeuk_server_module.global.common.ErrorDefineCode;
+import com.tower_of_fisa.paydeuk_server_module.global.config.exception.custom.exception.AuthCredientialException401;
 import com.tower_of_fisa.paydeuk_server_module.global.config.redis.RedisService;
-import com.tower_of_fisa.paydeuk_server_module.repository.CardBenefitRepository;
-import com.tower_of_fisa.paydeuk_server_module.repository.MerchantRepository;
-import com.tower_of_fisa.paydeuk_server_module.repository.PaymentRepository;
-import com.tower_of_fisa.paydeuk_server_module.repository.UserCardRepository;
+import com.tower_of_fisa.paydeuk_server_module.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Slf4j
@@ -33,15 +29,25 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final MerchantRepository merchantRepository;
     private final CardBenefitRepository cardBenefitRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * [카드 추천] 상품을 결제할 때 가장 많은 혜택을 받을 수 있는 카드를 추천한다.
      *
      * @param request RecommendRequest - 사용자id, 가맹점id, 결제 금액
-     * @return Long - 추가된 유저의 ID
      */
     @Transactional
     public void processPayment(ProcessPaymentRequest request) {
+        // 결제 비밀번호 검증
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        log.info(request.getPaymentPinCode() + " " + user.getPaymentPinCode());
+        if (!passwordEncoder.matches(request.getPaymentPinCode(), user.getPaymentPinCode())) {
+            throw new AuthCredientialException401(ErrorDefineCode.INVALID_PAYMENT_PIN);
+        }
+
         // 걀제 완료 시 레디스에 할인 금액 저장을 위한 키 생성
         String key = "user_benefit:" + request.getUserId() + ":"+LocalDate.now().format(DateTimeFormatter.ofPattern("MM"));
 

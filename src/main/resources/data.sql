@@ -3,7 +3,7 @@
 INSERT INTO users (name, username, password, personal_auth_key, phone, email, payment_pin_code, address, role, birth_date,
                    status, created_at, updated_at)
 VALUES ('일반유저', 'user', '$2a$12$2JKJbuJMKQJe0hX5zr9c0e.BgSBjVe2cKnBRis1e4vc1FXpbue0M.', '12345', '010-1234-5678', 'test@test.com',
-        NULL, '서울 마포구 월드컵북로 434 상암 IT Tower', 'USER', '1990-01-01', 'active', NOW(),
+        '$2a$10$mtDP1WiYuWCSAOMwPiBH4uYb6nW4QyIiglgvUVgMazeQnlfMjpW/2', '서울 마포구 월드컵북로 434 상암 IT Tower', 'USER', '1990-01-01', 'active', NOW(),
         NOW());
 
 --      ROLE == ADMIN

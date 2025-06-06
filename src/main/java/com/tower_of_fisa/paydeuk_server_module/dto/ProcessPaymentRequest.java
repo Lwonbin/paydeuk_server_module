@@ -23,4 +23,8 @@ public class ProcessPaymentRequest {
     private Long merchantId;
 
     private String productName;
+
+    @NotBlank(message = "결제 비밀번호가 없습니다.")
+    @Schema(description = "Payment Pin Code", example = "159753")
+    private String paymentPinCode;
 }
