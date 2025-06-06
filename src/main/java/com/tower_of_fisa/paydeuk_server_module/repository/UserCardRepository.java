@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,7 +28,7 @@ public interface UserCardRepository extends JpaRepository<UserCard,Long> {
     JOIN CardBenefit cb ON cb.card.id = uc.card.id
     WHERE cb.benefit.id = :benefitId
     """)
-    String findCardTokenByBenefitId(Long benefitId);
+    List<String> findCardTokenByBenefitId(Long benefitId);
 
 
     @Query("SELECT uc FROM UserCard uc " +
