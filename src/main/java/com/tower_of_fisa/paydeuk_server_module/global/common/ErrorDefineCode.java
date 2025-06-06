@@ -18,6 +18,7 @@ public enum ErrorDefineCode {
   BENEFIT_CONDITION_NOT_FOUND("CON_01", "해당 조건 카테고리는 지원하지 않습니다."),
   CARD_NOT_FOUND("CAR_02","해당 카드를 찾을 수 없습니다."),
   INVALID_JSON_FORMAT("CAR_03", "잘못된 JSON 포맷입니다."),
+  INVALID_PAYMENT_PIN("PAY_01", "간편 결제 비밀번호가 일치하지 않습니다."),
   ;
   private final String code;
   private final String message;
