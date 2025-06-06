@@ -15,9 +15,9 @@ VALUES ('관리자', 'admin', '$2a$12$2JKJbuJMKQJe0hX5zr9c0e.BgSBjVe2cKnBRis1e4v
 -- CARD TABLE
 -- card_id == 1
 INSERT INTO card (name, type, image_url, annual_fee, company, created_at, updated_at)
-VALUES ('현대카드 M', 'credit', 'dummyurl', 30000, 'HYUNDAI', NOW(), NOW()),
-('삼성카드 S', 'credit', 'dummyurl2', 20000, 'SAMSUNG', NOW(), NOW()),
-       ('우리카드 W', 'credit', 'dummyurl3', 40000, 'WOORI', NOW(), NOW());
+VALUES ('현대카드 M', 'credit', 'https://paydeuk-s3-bucket.s3.ap-northeast-2.amazonaws.com/card-img/hyundai-m.png', 30000, 'HYUNDAI', NOW(), NOW()),
+('삼성카드 S', 'credit', 'https://paydeuk-s3-bucket.s3.ap-northeast-2.amazonaws.com/card-img/samsung-tap_tap.png', 20000, 'SAMSUNG', NOW(), NOW()),
+       ('우리카드 W', 'credit', 'https://paydeuk-s3-bucket.s3.ap-northeast-2.amazonaws.com/card-img/woori-shopping_plus.png', 40000, 'WOORI', NOW(), NOW());
 -- USER_CARD TABLE
 INSERT INTO user_card (user_id, card_id, card_token, card_number, is_default_card, created_at, updated_at)
 VALUES (1, 1, 'hyundai_m_sungjun', '1234', 1, NOW(), NOW()),
@@ -86,8 +86,8 @@ VALUES (1, 1, NOW(), NOW()),
        (1, 2, NOW(), NOW()),
        (1, 3, NOW(), NOW()),
        (1, 4, NOW(), NOW()),
-       -- (2,2,NOW(),NOW()),
-      -- (2, 3, NOW(), NOW()),
+       (2, 2, NOW(), NOW()),
+       (2, 3, NOW(), NOW()),
        (3, 5, NOW(), NOW()),
        (3, 6, NOW(), NOW());
 
