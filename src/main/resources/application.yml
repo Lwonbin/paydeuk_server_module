@@ -62,3 +62,7 @@ error:
 card:
   api:
     url: "http://localhost:8084/api/card"
+
+logging:
+  file:
+    name:  # 비워서 spring.log 비활성화
