@@ -123,41 +123,35 @@ public class UserCardService {
 
 
     private Optional<BenefitDiscount> validateAndAdjustDiscount(BenefitDiscount benefitDiscount) {
-        List<String> cardTokens = userCardRepository.findCardTokenByBenefitId(benefitDiscount.getBenefitId());
-        log.info("cardTokens: {}", cardTokens);
+        String cardToken = userCardRepository.findCardTokenByBenefitId(benefitDiscount.getBenefitId());
+        int lastMonthSpending = cardApiClient.getLastMonthSpending(cardToken);
 
-        List<Long> conditionIds = benefitConditionRepository.findConditionIdsByBenefitId(benefitDiscount.getBenefitId());
-        List<BenefitCondition> conditionLimits = benefitConditionRepository.findByBenefitId(benefitDiscount.getBenefitId());
+        // 전월 실적에 해당하는 할인율 조건이 아닐시 빈값 리턴하여 다음 혜택 유효성 확인Add commentMore actions
+        if (!discountRepository.existsApplicableDiscount(benefitDiscount.getSpendingRangeId(), lastMonthSpending)) {
+            log.info("benefit_id={}의 실적이 spendingRange_id={}에 해당하지 않음",benefitDiscount.getBenefitId(),benefitDiscount.getSpendingRangeId());
+            return Optional.empty();
+        }
+        log.info("benefit_id={}의 실적이 spendingRange_id={}에 해당함",benefitDiscount.getBenefitId(),benefitDiscount.getSpendingRangeId());
+
+        //추가 조건 여부 확인(한도)Add commentMore actions
         boolean hasCondition = benefitRepository.findHasAdditionalConditionById(benefitDiscount.getBenefitId());
 
-        for (String cardToken : cardTokens) {
-            if (cardToken.isEmpty()) continue;
-
-            int lastMonthSpending = cardApiClient.getLastMonthSpending(cardToken);
-
-            if (!discountRepository.existsApplicableDiscount(benefitDiscount.getSpendingRangeId(), lastMonthSpending)) {
-                log.info("benefit_id={}의 실적이 spendingRange_id={}에 해당하지 않음", benefitDiscount.getBenefitId(), benefitDiscount.getSpendingRangeId());
-                continue;
-            }
-            log.info("benefit_id={}의 실적이 spendingRange_id={}에 해당함", benefitDiscount.getBenefitId(), benefitDiscount.getSpendingRangeId());
-
-            if (Boolean.FALSE.equals(hasCondition)) {
-                log.info("benefit_id={}의 추가 한도 조건이 없음", benefitDiscount.getBenefitId());
-                return Optional.of(benefitDiscount);
-            }
-
-            List<CardConditionResponse> conditionUsage = cardApiClient.getBenefitConditions(cardToken, conditionIds);
-
-            int adjustedAmount = conditionUsage.isEmpty()
-                    ? adjustWithoutUsage(benefitDiscount, lastMonthSpending, conditionLimits)
-                    : adjustWithUsage(benefitDiscount, conditionUsage, conditionLimits);
-
-            if (adjustedAmount > 0) {
-                return Optional.of(BenefitDiscount.fromAdjusted(benefitDiscount, adjustedAmount));
-            }
+        if(Boolean.FALSE.equals(hasCondition)) {
+            log.info("benefit_id={}의 추가 한도 조건이 없음",benefitDiscount.getBenefitId());
+            return Optional.of(benefitDiscount);
         }
 
-        return Optional.empty();
+        List<Long> conditionIds = benefitConditionRepository.findConditionIdsByBenefitId(benefitDiscount.getBenefitId());
+        List<CardConditionResponse> conditionUsage = cardApiClient.getBenefitConditions(cardToken, conditionIds);
+        List<BenefitCondition> conditionLimits = benefitConditionRepository.findByBenefitId(benefitDiscount.getBenefitId());
+
+        int adjustedAmount = conditionUsage.isEmpty()
+                ? adjustWithoutUsage(benefitDiscount, lastMonthSpending, conditionLimits)
+                : adjustWithUsage(benefitDiscount, conditionUsage, conditionLimits);
+
+        if (adjustedAmount <= 0) return Optional.empty();
+
+        return Optional.of(BenefitDiscount.fromAdjusted(benefitDiscount, adjustedAmount));
     }
 
     private int adjustWithoutUsage(BenefitDiscount benefitDiscount, int spending, List<BenefitCondition> limits) {

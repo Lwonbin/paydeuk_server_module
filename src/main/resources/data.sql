@@ -86,9 +86,7 @@ VALUES (1, 1, NOW(), NOW()),
        (1, 2, NOW(), NOW()),
        (1, 3, NOW(), NOW()),
        (1, 4, NOW(), NOW()),
-       (2, 2, NOW(), NOW()),
-       (2, 3, NOW(), NOW()),
-       (3, 5, NOW(), NOW()),
+       (2, 5, NOW(), NOW()),
        (3, 6, NOW(), NOW());
 
 
