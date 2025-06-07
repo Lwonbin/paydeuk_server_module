@@ -6,7 +6,9 @@ CREATE TABLE spending_range
 (
     id           BIGINT AUTO_INCREMENT PRIMARY KEY,
     min_spending BIGINT,
-    max_spending BIGINT
+    max_spending BIGINT,
+    created_at   TIMESTAMP,
+    updated_at   TIMESTAMP
 );
 
 CREATE TABLE users
@@ -111,7 +113,7 @@ CREATE TABLE user_card
     id              BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     user_id         BIGINT                            NOT NULL,
     card_id         BIGINT                            NOT NULL,
-    card_token      VARCHAR(40)                       NOT NULL,
+    card_token      VARCHAR(100)                      NOT NULL,
     card_number     VARCHAR(40)                       NOT NULL,
     is_default_card BOOLEAN                           NOT NULL,
     created_at      TIMESTAMP,
@@ -135,11 +137,4 @@ CREATE TABLE payment
     FOREIGN KEY (user_card_id) REFERENCES user_card (id),
     FOREIGN KEY (merchant_id) REFERENCES merchant (id),
     FOREIGN KEY (card_benefit_id) REFERENCES card_benefit (id)
-);
-
-CREATE TABLE example (
-                         exam_id   BIGINT AUTO_INCREMENT PRIMARY KEY,
-                         name      VARCHAR(255) NOT NULL,
-                         created_at TIMESTAMP,
-                         updated_at TIMESTAMP
 );
