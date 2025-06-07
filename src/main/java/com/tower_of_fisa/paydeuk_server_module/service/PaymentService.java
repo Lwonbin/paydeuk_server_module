@@ -33,7 +33,9 @@ public class PaymentService {
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * [카드 추천] 상품을 결제할 때 가장 많은 혜택을 받을 수 있는 카드를 추천한다.
+     * [결제] 사용자가 선택한 카드를 통해 결제를 진행한다
+     * 카드사와의 통신읉 통해 결제를 진행 후, 결제가 성공했을 경우
+     * Redis와 DB에 혜택 금액과 결제 내역을 저장한다.
      *
      * @param request RecommendRequest - 사용자id, 가맹점id, 결제 금액
      */
@@ -47,9 +49,6 @@ public class PaymentService {
         if (!passwordEncoder.matches(request.getPaymentPinCode(), user.getPaymentPinCode())) {
             throw new AuthCredientialException401(ErrorDefineCode.INVALID_PAYMENT_PIN);
         }
-
-        // 걀제 완료 시 레디스에 할인 금액 저장을 위한 키 생성
-        String key = "user_benefit:" + request.getUserId() + ":"+LocalDate.now().format(DateTimeFormatter.ofPattern("MM"));
 
         // 결제를 진행할 카드의 카드 토큰
         String cardToken = userCardRepository.findCardTokenByUserIdAndCardId(request.getUserId(), request.getCardId())
@@ -68,31 +67,31 @@ public class PaymentService {
             CardBenefit cardBenefit =
                 cardBenefitRepository
                         .findByCardAndBenefitId(userCard.getCard(), paymentResponse.getBenefitId())
-                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카드"));
+                        .orElse(null);
 
-            // DB에 결제 내역 저장
-            Payment newPayment = Payment.builder()
-                    .productName(request.getProductName())
-                    .amount(Integer.parseInt(String.valueOf(request.getAmount()).split("\\.")[0]))
-                    .paymentSuccess(true)
-                    .discountAmount(Integer.parseInt(String.valueOf(paymentResponse.getDiscountAmount()).split("\\.")[0]))
-                    .userCard(userCard)
-                    .merchant(merchant)
-                    .cardBenefit(cardBenefit)
-                    .build();
+        Payment newPayment = Payment.builder()
+                .productName(request.getProductName())
+                .amount(Integer.parseInt(String.valueOf(request.getAmount()).split("\\.")[0]))
+                .paymentSuccess(true)
+                .discountAmount(Integer.parseInt(String.valueOf(paymentResponse.getDiscountAmount()).split("\\.")[0]))
+                .userCard(userCard)
+                .merchant(merchant)
+                .cardBenefit(cardBenefit)
+                .build();
 
-            paymentRepository.save(newPayment);
+        paymentRepository.save(newPayment);
 
-            // 아직 레디스에 할인 금액이 저장되어 있지 않을 경우 (매월 첫 번째 결제)
-            if (redisService.getValue(key).isEmpty()) {
+        if (cardBenefit != null) { // 할인 받았을 경우
+            // Redis Key 생성
+            String key = "user_benefit:" + request.getUserId() + ":"+LocalDate.now().format(DateTimeFormatter.ofPattern("MM"));
+
+            if (redisService.getValue(key).isEmpty()) { // 아직 레디스에 할인 금액이 저장되어 있지 않을 경우 (매월 첫 번째 결제)
                 long ttl = redisService.getRemainingSecondsUntilNextTwoMonthsFirstDay();
                 redisService.saveValue(key, paymentResponse.getDiscountAmount().toString(), ttl);
             }
-            else {
-                redisService.addValue(key, paymentResponse.getDiscountAmount());
-            }
+            else { redisService.addValue(key, paymentResponse.getDiscountAmount()); }
 
             log.info("결제 정보 저장 완료됨: paymentId={}", newPayment.getId());
-
+        }
     }
 }
