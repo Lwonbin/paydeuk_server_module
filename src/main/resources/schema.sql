@@ -128,7 +128,7 @@ CREATE TABLE payment
     payment_success BOOLEAN                           NOT NULL,
     user_card_id    BIGINT                            NOT NULL,
     merchant_id     BIGINT,
-    card_benefit_id BIGINT                            NOT NULL,
+    card_benefit_id BIGINT,
     discount_amount INT                               NOT NULL,
     created_at      TIMESTAMP,
     updated_at      TIMESTAMP,

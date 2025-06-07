@@ -39,6 +39,6 @@ public class Payment extends BaseEntity {
   private Merchant merchant;
 
   @OneToOne
-  @JoinColumn(name = "card_benefit_id", nullable = false)
+  @JoinColumn(name = "card_benefit_id")
   private CardBenefit cardBenefit;
 }
