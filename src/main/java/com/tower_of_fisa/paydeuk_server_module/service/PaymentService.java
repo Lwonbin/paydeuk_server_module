@@ -41,12 +41,15 @@ public class PaymentService {
      */
     @Transactional
     public void processPayment(ProcessPaymentRequest request) {
-        // 결제 비밀번호 검증
+        log.info("[processPayment] 결제 요청 수신: userId={}, merchantId={}, amount={}, cardId={}, productName={}",
+                request.getUserId(), request.getMerchantId(), request.getAmount(),
+                request.getCardId(), request.getProductName());
+
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        log.info(request.getPaymentPinCode() + " " + user.getPaymentPinCode());
         if (!passwordEncoder.matches(request.getPaymentPinCode(), user.getPaymentPinCode())) {
+            log.warn("[processPayment] 결제 실패 - 비밀번호 불일치: userId={}", request.getUserId());
             throw new AuthCredientialException401(ErrorDefineCode.INVALID_PAYMENT_PIN);
         }
 
@@ -54,17 +57,20 @@ public class PaymentService {
         String cardToken = userCardRepository.findCardTokenByUserIdAndCardId(request.getUserId(), request.getCardId())
                 .orElseThrow(() -> new IllegalArgumentException("카드 토큰이 존재하지 않습니다."));
 
-        // 카드사와의 결제 프로세스 진행
+        log.info("[processPayment] 카드사 결제 요청 전송: cardTokenPrefix={}, amount={}, merchantId={}",
+                cardToken.substring(0, 6) + "****", request.getAmount(), request.getMerchantId());
+
         PaymentResponse paymentResponse = cardApiClient.processPayment(cardToken, request.getAmount(), request.getMerchantId());
 
-            UserCard userCard =
-                    userCardRepository
-                            .findByUserIdAndCardId(request.getUserId(), request.getCardId())
-                            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 User Card 입니다."));
+        log.info("[processPayment] 카드사 응답 수신 성공: response={}", paymentResponse);
 
-            Merchant merchant = merchantRepository.getReferenceById(request.getMerchantId());
+        UserCard userCard = userCardRepository
+                .findByUserIdAndCardId(request.getUserId(), request.getCardId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 User Card 입니다."));
 
-            CardBenefit cardBenefit =
+        Merchant merchant = merchantRepository.getReferenceById(request.getMerchantId());
+
+        CardBenefit cardBenefit =
                 cardBenefitRepository
                         .findByCardAndBenefitId(userCard.getCard(), paymentResponse.getBenefitId())
                         .orElse(null);
@@ -83,15 +89,17 @@ public class PaymentService {
 
         if (cardBenefit != null) { // 할인 받았을 경우
             // Redis Key 생성
-            String key = "user_benefit:" + request.getUserId() + ":"+LocalDate.now().format(DateTimeFormatter.ofPattern("MM"));
+            String key = "user_benefit:" + request.getUserId() + ":" +
+                    LocalDate.now().format(DateTimeFormatter.ofPattern("MM"));
 
-            if (redisService.getValue(key).isEmpty()) { // 아직 레디스에 할인 금액이 저장되어 있지 않을 경우 (매월 첫 번째 결제)
+            if (redisService.getValue(key).isEmpty()) { // 아직 Redis에 저장되지 않은 경우
                 long ttl = redisService.getRemainingSecondsUntilNextTwoMonthsFirstDay();
                 redisService.saveValue(key, paymentResponse.getDiscountAmount().toString(), ttl);
+            } else {
+                redisService.addValue(key, paymentResponse.getDiscountAmount());
             }
-            else { redisService.addValue(key, paymentResponse.getDiscountAmount()); }
 
-            log.info("결제 정보 저장 완료됨: paymentId={}", newPayment.getId());
+            log.info("[processPayment] 결제 정보 저장 완료됨: paymentId={}", newPayment.getId());
         }
     }
 }
