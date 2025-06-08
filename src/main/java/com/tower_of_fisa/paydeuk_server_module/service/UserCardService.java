@@ -223,7 +223,7 @@ public class UserCardService {
         Long min = range.getMinSpending();
         Long max = range.getMaxSpending();
         return (min == null || spending >= min) &&
-                (max == null || spending <= max);
+                (max == null || spending < max);
     }
 
     private List<RecommendResponse> getDefaultCardRecommendation(Long userId) {

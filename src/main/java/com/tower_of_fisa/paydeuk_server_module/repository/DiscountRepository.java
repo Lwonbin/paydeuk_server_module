@@ -18,7 +18,7 @@ public interface DiscountRepository extends JpaRepository<Discount, Long> {
     FROM Discount d
     WHERE d.spendingRange.id = :spendingRangeId
       AND (:spending >= d.spendingRange.minSpending OR d.spendingRange.minSpending IS NULL)
-      AND (:spending <= d.spendingRange.maxSpending OR d.spendingRange.maxSpending IS NULL)
+      AND (:spending < d.spendingRange.maxSpending OR d.spendingRange.maxSpending IS NULL)
 """)
     boolean existsApplicableDiscount(Long spendingRangeId, int spending);
 
