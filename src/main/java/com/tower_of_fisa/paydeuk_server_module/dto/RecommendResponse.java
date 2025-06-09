@@ -11,6 +11,7 @@ import lombok.ToString;
 @ToString
 @Builder
 public class RecommendResponse {
+    private Long cardId;
     private String cardName;
     private String imageUrl;
     private String cardNumber;
@@ -19,6 +20,7 @@ public class RecommendResponse {
 
     public static RecommendResponse from(UserCard userCard, int discount) {
         return RecommendResponse.builder()
+                .cardId(userCard.getCard().getId())
                 .cardName(userCard.getCard().getName())
                 .imageUrl(userCard.getCard().getImageUrl())
                 .cardNumber(userCard.getCardNumber())
@@ -29,6 +31,7 @@ public class RecommendResponse {
 
     public static RecommendResponse fromDefault(UserCard userCard) {
         return RecommendResponse.builder()
+                .cardId(userCard.getCard().getId())
                 .cardName(userCard.getCard().getName())
                 .imageUrl(userCard.getCard().getImageUrl())
                 .cardNumber(userCard.getCardNumber())
